@@ -43,35 +43,22 @@ struct FibonacciHeap {
      */
     
     ~FibonacciHeap();
-    
     void deallocate(Node *n);
-    
     void list_insert(Node* l, Node* r, Node* x);
-    
     Node * heap_link(Node* y, Node* x);   // links two trees from the root linked list
-    
     void consolidate();
-    
     void cut(Node* x, Node* y);
-    
     void cascading_cut(Node* y);
-    
     Node * insert(int k);       // insert key into the heap
-    
     int get_min();              // get the lowest key
-    
     void remove_min();          // remove the lowest key
-    
     void decrease_key(Node* x, int k);
-    
     void change_key(Node * x, int k);
-    
     void remove(Node * x);      // remove Node
     
     /* priting/debugging functions */
     
     void print_node(Node* n, int ntab, int level, bool print_children);
-    
     void print(int level);
 };
 
