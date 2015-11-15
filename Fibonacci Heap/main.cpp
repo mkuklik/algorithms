@@ -55,7 +55,8 @@ struct FibonacciHeap {
     void decrease_key(Node* x, int k);
     void change_key(Node * x, int k);
     void remove(Node * x);      // remove Node
-    
+    int size() { return N; };
+
     /* priting/debugging functions */
     
     void print_node(Node* n, int ntab, int level, bool print_children);
