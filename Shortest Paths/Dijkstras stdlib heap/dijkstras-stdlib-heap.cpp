@@ -129,36 +129,6 @@ struct Graph {
     }
 };
 
-struct V {
-    
-    int vertex{-1};
-    int dist{INT_MAX};
-    
-    V() {}; // used in vector initialization
-    V(int v, int dd): vertex(v), dist(dd) {};
-
-    bool operator <(const V& a) const { return a.dist < this->dist; } // version 1
-    
-//    friend bool operator <(const V &a, const V &b); // version 2
-};
-
-/*
- *  friend comparison function
- *  Version 2
- */
-//bool operator<(const V& a, const V& b) {  // version 2, friend function
-//    return a.dist > b.dist;
-//}
-
-/*
- *   lambda comparison function for structure V, used in std::make_heap, pop_heap
- *   version 3
- */
-
-//auto Vcomp = [] (const V &a, const V &b) { return a.dist > b.dist; }; // Version 3
-
-
-
 /*
  *  Dijkstra's algorithms using StdLib heap
  */
@@ -168,34 +138,33 @@ void dijkstras(const Graph &g, int s) {
 
     int n_v = g.n_vertices();
     
-    vector<V> vd(n_v);
-    vector<bool> visited(n_v);
+    vector<int> pq(n_v); // priority queue with vertices ids
     vector<int> dist(n_v);
+    vector<bool> visited(n_v, false);
     vector<int> previous(n_v);
     
     for (int i=0; i < n_v; i++) {
+        pq[i] = i;
         dist[i] = INT_MAX;
         previous[i] = -1;
-        vd[i] = V(i, INT_MAX);
     }
     
     dist[s] = 0;
-    vd[s].dist = 0;
+    previous[s] = s;
     
-    make_heap(vd.begin(), vd.end());   // version 1 & 2
-    // or make_heap(vd.begin(), vd.end(), Vcomp); // version 3
+    make_heap(pq.begin(), pq.end(), [dist] (int a, int b) { return dist[a] > dist[b]; });
     
-    while (vd.size() > 0) {
+    while (pq.size() > 0) {
         
-        pop_heap(vd.begin(), vd.end()); // version 1 & 2
-        //pop_heap(vd.begin(), vd.end(), Vcomp); // version 3
-        
-        int v {vd.back().vertex};
-        vd.pop_back();
+        int v {pq[0]};
+        pop_heap(pq.begin(), pq.end());
+        pq.pop_back();
         
         visited[v] = true; // v is removed from heap, keeps track of
                            // vertices on one side of the cut
-        bool heapify{false};
+        
+        bool heapify{false}; // keeping track if heap was updated
+                             // so taht we don't unnecesserily heapify
         
         // Iterate over edges originating from v
         // and update distance to end vertices
@@ -210,24 +179,13 @@ void dijkstras(const Graph &g, int s) {
                 dist[to] = dist[v] + e->value;
                 previous[to] = v;
                 
-                // update heap
-                // stdlib heap function  doesn't have efficient way to locate
-                // & to decrease key's value after changing keys in the vector,
-                // vector has to be heapify again, it is very expensive operation
-                
-                for(auto it=vd.begin(); it != vd.end(); it++)
-                    if (it->vertex == to) {
-                        heapify = true;
-                        it->dist = dist[to];
-                        break;
-                    }
+                heapify = true;
             }
             e = e->next;
         }
         
-        if (heapify)
-            make_heap(vd.begin(), vd.end()); // version 1 & 2 
-            // make_heap(vd.begin(), vd.end(), Vcomp); // version 3
+        if (heapify) // so that we don't heapify when there was no changes to pq
+            make_heap(pq.begin(), pq.end(), [dist] (int a, int b) { return dist[a] > dist[b]; });
     }
     
     
@@ -237,7 +195,7 @@ void dijkstras(const Graph &g, int s) {
         if (i != s) {
             cout << i << ", " << dist[i] << ": ";
             int p = previous[i];
-            while (p != -1) {
+            while (p != s) {
                 cout << p << ", ";
                 p = previous[p];
             }
