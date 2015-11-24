@@ -1,0 +1,33 @@
+==35816== Memcheck, a memory error detector
+==35816== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==35816== Using Valgrind-3.12.0.SVN and LibVEX; rerun with -h for copyright info
+==35816== Command: ./a.out
+==35816== Parent PID: 6892
+==35816== 
+==35816== 
+==35816== HEAP SUMMARY:
+==35816==     in use at exit: 26,261 bytes in 193 blocks
+==35816==   total heap usage: 360 allocs, 167 frees, 79,677 bytes allocated
+==35816== 
+==35816== 4,096 bytes in 1 blocks are still reachable in loss record 60 of 61
+==35816==    at 0x100018E3B: malloc (in /usr/local/Cellar/valgrind/HEAD/lib/valgrind/vgpreload_memcheck-amd64-darwin.so)
+==35816==    by 0x1002DA789: __smakebuf (in /usr/lib/system/libsystem_c.dylib)
+==35816==    by 0x1002EF7DD: __swsetup (in /usr/lib/system/libsystem_c.dylib)
+==35816==    by 0x1002D99E5: __sfvwrite (in /usr/lib/system/libsystem_c.dylib)
+==35816==    by 0x1002D9FDD: fwrite (in /usr/lib/system/libsystem_c.dylib)
+==35816==    by 0x10003538B: std::__1::__stdoutbuf<char>::overflow(int) (in /usr/lib/libc++.1.dylib)
+==35816==    by 0x10002B1CC: std::__1::basic_streambuf<char, std::__1::char_traits<char> >::xsputn(char const*, long) (in /usr/lib/libc++.1.dylib)
+==35816==    by 0x100005450: std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> > std::__1::__pad_and_output<char, std::__1::char_traits<char> >(std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> >, char const*, char const*, char const*, std::__1::ios_base&, char) (streambuf:360)
+==35816==    by 0x100004E66: std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) (ostream:755)
+==35816==    by 0x10000311B: std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::operator<< <std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*) (in ./a.out)
+==35816==    by 0x100001B3D: main (edmonds-karp.cpp:374)
+==35816== 
+==35816== LEAK SUMMARY:
+==35816==    definitely lost: 0 bytes in 0 blocks
+==35816==    indirectly lost: 0 bytes in 0 blocks
+==35816==      possibly lost: 0 bytes in 0 blocks
+==35816==    still reachable: 4,096 bytes in 1 blocks
+==35816==         suppressed: 22,165 bytes in 192 blocks
+==35816== 
+==35816== For counts of detected and suppressed errors, rerun with: -v
+==35816== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 16 from 16)
